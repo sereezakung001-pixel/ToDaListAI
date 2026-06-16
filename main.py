@@ -37,7 +37,26 @@ def add_task():
 
 def view_all_tasks():
     """ดูงานทั้งหมด"""
-    pass
+    print("\n" + "-"*80)
+    print("รายการงานทั้งหมด")
+    print("-"*80)
+    
+    # ตรวจสอบว่ามีงานหรือไม่
+    if not tasks:
+        print("ยังไม่มีงานในรายการ")
+        print("-"*80)
+        return
+    
+    # แสดงหัวตาราง
+    print(f"{'ลำดับ':<5} {'ชื่องาน':<30} {'วันครบกำหนด':<15} {'สถานะ':<15}")
+    print("-"*80)
+    
+    # แสดงแต่ละงาน
+    for index, task in enumerate(tasks, 1):
+        status = "✅ เสร็จแล้ว" if task["completed"] else "⏳ ยังไม่เสร็จ"
+        print(f"{index:<5} {task['title']:<30} {task['due_date']:<15} {status:<15}")
+    
+    print("-"*80)
 
 
 def edit_task():
