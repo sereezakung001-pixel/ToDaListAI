@@ -1,6 +1,10 @@
+import json
+import os
+
 # ตัวแปรทั่วโลกเก็บรายชื่องาน
 tasks = []
 task_id_counter = 0
+TASKS_FILE = "tasks.json"
 
 
 def add_task():
@@ -171,6 +175,38 @@ def delete_task():
         print("⚠️  โปรดป้อนตัวเลขที่ถูกต้อง!")
 
 
+def save_tasks():
+    """บันทึกข้อมูลงานทั้งหมดลงไฟล์ tasks.json"""
+    try:
+        with open(TASKS_FILE, "w", encoding="utf-8") as file:
+            json.dump(tasks, file, ensure_ascii=False, indent=2)
+        print("💾 บันทึกข้อมูลสำเร็จแล้ว")
+    except Exception as e:
+        print(f"⚠️  เกิดข้อผิดพลาดในการบันทึก: {e}")
+
+
+def load_tasks():
+    """โหลดข้อมูลงานจากไฟล์ tasks.json"""
+    global tasks, task_id_counter
+    
+    try:
+        if os.path.exists(TASKS_FILE):
+            with open(TASKS_FILE, "r", encoding="utf-8") as file:
+                tasks = json.load(file)
+                # อัปเดต task_id_counter จากข้อมูลที่โหลดมา
+                if tasks:
+                    task_id_counter = max(task["id"] for task in tasks)
+            print("📂 โหลดข้อมูลงานสำเร็จแล้ว")
+        else:
+            tasks = []
+            task_id_counter = 0
+            print("📂 ยังไม่มีไฟล์งาน เริ่มต้นรายการว่าง")
+    except Exception as e:
+        print(f"⚠️  เกิดข้อผิดพลาดในการโหลด: {e}")
+        tasks = []
+        task_id_counter = 0
+
+
 def show_menu():
     """แสดงเมนูหลัก"""
     print("\n" + "="*30)
@@ -186,6 +222,9 @@ def show_menu():
 
 def main():
     """ฟังก์ชันหลัก"""
+    # โหลดข้อมูลงานจากไฟล์เมื่อเริ่มโปรแกรม
+    load_tasks()
+    
     while True:
         show_menu()
         choice = input("เลือกตัวเลือก (1-5): ").strip()
@@ -199,6 +238,7 @@ def main():
         elif choice == "4":
             delete_task()
         elif choice == "5":
+            save_tasks()
             print("ออกจากโปรแกรม... ลาก่อน!")
             break
         else:
