@@ -61,7 +61,70 @@ def view_all_tasks():
 
 def edit_task():
     """แก้ไขงาน"""
-    pass
+    # ตรวจสอบว่ามีงานหรือไม่
+    if not tasks:
+        print("\n⚠️  ยังไม่มีงานในรายการ")
+        return
+    
+    # แสดงรายการงานก่อน
+    view_all_tasks()
+    
+    print("\n" + "-"*30)
+    print("แก้ไขงาน")
+    print("-"*30)
+    
+    # ขอ index จากผู้ใช้
+    try:
+        task_index = int(input("เลือกลำดับงานที่ต้องการแก้ไข: ")) - 1
+        
+        # ตรวจสอบ index
+        if task_index < 0 or task_index >= len(tasks):
+            print("⚠️  ลำดับงานไม่ถูกต้อง!")
+            return
+        
+        selected_task = tasks[task_index]
+        
+        # แสดงตัวเลือกการแก้ไข
+        print(f"\nกำลังแก้ไข: {selected_task['title']}")
+        print("1. แก้ไขชื่องาน")
+        print("2. แก้ไขรายละเอียด")
+        print("3. แก้ไขวันครบกำหนด")
+        print("4. เปลี่ยนสถานะ (เสร็จแล้ว/ยังไม่เสร็จ)")
+        print("0. ยกเลิก")
+        
+        edit_choice = input("เลือกตัวเลือก (0-4): ").strip()
+        
+        if edit_choice == "1":
+            new_title = input("ป้อนชื่องานใหม่: ").strip()
+            if new_title:
+                selected_task["title"] = new_title
+                print("✅ แก้ไขชื่องานสำเร็จแล้ว")
+            else:
+                print("⚠️  ชื่องานต้องไม่ว่าง!")
+        
+        elif edit_choice == "2":
+            new_description = input("ป้อนรายละเอียดใหม่: ").strip()
+            selected_task["description"] = new_description
+            print("✅ แก้ไขรายละเอียดสำเร็จแล้ว")
+        
+        elif edit_choice == "3":
+            new_due_date = input("ป้อนวันครบกำหนดใหม่ (dd/mm/yyyy): ").strip()
+            selected_task["due_date"] = new_due_date
+            print("✅ แก้ไขวันครบกำหนดสำเร็จแล้ว")
+        
+        elif edit_choice == "4":
+            selected_task["completed"] = not selected_task["completed"]
+            status = "เสร็จแล้ว" if selected_task["completed"] else "ยังไม่เสร็จ"
+            print(f"✅ เปลี่ยนสถานะเป็น '{status}' สำเร็จแล้ว")
+        
+        elif edit_choice == "0":
+            print("ยกเลิกการแก้ไข")
+        
+        else:
+            print("⚠️  ตัวเลือกไม่ถูกต้อง!")
+    
+    except ValueError:
+        print("⚠️  โปรดป้อนตัวเลขที่ถูกต้อง!")
 
 
 def delete_task():
