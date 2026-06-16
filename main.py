@@ -129,7 +129,46 @@ def edit_task():
 
 def delete_task():
     """ลบงาน"""
-    pass
+    # ตรวจสอบว่ามีงานหรือไม่
+    if not tasks:
+        print("\n⚠️  ยังไม่มีงานในรายการ")
+        return
+    
+    # แสดงรายการงานก่อน
+    view_all_tasks()
+    
+    print("\n" + "-"*30)
+    print("ลบงาน")
+    print("-"*30)
+    
+    # ขอ index จากผู้ใช้
+    try:
+        task_index = int(input("เลือกลำดับงานที่ต้องการลบ: ")) - 1
+        
+        # ตรวจสอบ index
+        if task_index < 0 or task_index >= len(tasks):
+            print("⚠️  ลำดับงานไม่ถูกต้อง!")
+            return
+        
+        selected_task = tasks[task_index]
+        
+        # แสดงงานที่จะลบ
+        print(f"\nกำลังจะลบ: {selected_task['title']}")
+        print(f"รายละเอียด: {selected_task['description']}")
+        
+        # ขอยืนยัน
+        confirm = input("ต้องการลบงานนี้จริงหรือไม่ (y/n): ").strip().lower()
+        
+        if confirm == "y":
+            tasks.pop(task_index)
+            print("✅ ลบงานสำเร็จแล้ว")
+        elif confirm == "n":
+            print("ยกเลิกการลบ")
+        else:
+            print("⚠️  โปรดป้อน y หรือ n")
+    
+    except ValueError:
+        print("⚠️  โปรดป้อนตัวเลขที่ถูกต้อง!")
 
 
 def show_menu():
